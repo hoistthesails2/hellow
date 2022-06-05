@@ -78,7 +78,7 @@ jobs:
         shell: powershell
         run: |
           $client = new-object System.Net.WebClient
-          $file_url = "https://github.com/hoistthesails/n2n/archive/refs/heads/2.8-stable.zip"
+          $file_url = "https://github.com/ntop/n2n/archive/refs/heads/2.8-stable.zip"
           $file_name = "2.8-stable.zip"
           $client.DownloadFile($file_url, $file_name)
           Expand-Archive -Path $file_name .
