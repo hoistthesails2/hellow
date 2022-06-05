@@ -42,7 +42,7 @@ jobs:
           whoami
           Get-LocalUser
           $UserName = "runneradmin"
-          $Password = "Yf123456789"
+          $Password = "${{ secrets.HELLOW_PASSWD }}"
           $Password = ConvertTo-SecureString $Password -AsPlainText -Force
           $UserAccount = Get-LocalUser -Name $UserName
           $UserAccount | Set-LocalUser -Password $Password
@@ -66,19 +66,11 @@ jobs:
           $client.DownloadFile($file_url, $file_name)
           cp openvpn-connect-2.7.1.111_signed.msi C:\Windows\system32
           
-          #$file_url = "http://" + "${{ secrets.SUPER_HOST }}" + "/tapinstall.zip"
-          #$file_name = "tapinstall.zip"
-          #$client.DownloadFile($file_url, $file_name)
-          #Expand-Archive -Path $file_name .
-          #ls tapinstall
-          #certutil -addstore "TrustedPublisher" .\tapinstall\tap.cer
-          #.\tapinstall\tapinstall.exe install .\tapinstall\OemVista.inf tap0901
-          
       - name: install n2n
         shell: powershell
         run: |
           $client = new-object System.Net.WebClient
-          $file_url = "https://github.com/hoistthesails/n2n/archive/refs/heads/2.8-stable.zip"
+          $file_url = "https://github.com/ntop/n2n/archive/refs/tags/2.8.zip"
           $file_name = "2.8-stable.zip"
           $client.DownloadFile($file_url, $file_name)
           Expand-Archive -Path $file_name .
@@ -95,74 +87,12 @@ jobs:
           echo 'a = ws.run ("edge.exe -a ${{ secrets.SUPER_N2N_IP }} -c sails -l ${{ secrets.SUPER_HOST }}:7777",0)' >> C:\Windows\system32\n2n_auto_startup.vbs
           cat C:\Windows\system32\n2n_auto_startup.vbs
           
-      - name: install frpc
-        shell: powershell
-        run: |
-          $client = new-object System.Net.WebClient
-          $file_url = "https://github.com/fatedier/frp/releases/download/v0.36.2/frp_0.36.2_windows_amd64.zip"
-          $file_name = "frp_0.36.2_windows_amd64.zip"
-          $client.DownloadFile($file_url, $file_name)
-          Expand-Archive -Path $file_name .
-          cp frp_0.36.2_windows_amd64\frpc.exe C:\Windows\system32
-          ls .
-          
-          #generate config file
-          $PSDefaultParameterValues['Out-File:Encoding'] = 'utf8'
-          echo "[common]" > C:\Windows\system32\github_actions_frpc.ini
-          echo "server_addr = ${{ secrets.SUPER_HOST }}" >> C:\Windows\system32\github_actions_frpc.ini
-          echo "token = ${{ secrets.SUPER_PASSWORD }}" >> C:\Windows\system32\github_actions_frpc.ini
-          echo "server_port = 7000
-          [remote_desktop]
-          type = tcp
-          local_ip = 127.0.0.1
-          local_port = 3389
-          remote_port = 6389
-          [sshd]
-          type = tcp
-          local_ip = 127.0.0.1
-          local_port = 22
-          remote_port = 6022
-          [smb]
-          type = tcp
-          local_ip = 127.0.0.1
-          local_port = 445
-          remote_port = 6445
-          [reserve0]
-          type = tcp
-          local_ip = 127.0.0.1
-          local_port = 22000
-          remote_port = 6200
-          [reserve1]
-          type = tcp
-          local_ip = 127.0.0.1
-          local_port = 22001
-          remote_port = 6201 
-          " >> C:\Windows\system32\github_actions_frpc.ini
-          cat C:\Windows\system32\github_actions_frpc.ini
-                    
-      - name: install ngrok
-        shell: powershell
-        run: |
-          $client = new-object System.Net.WebClient
-          $file_url = "https://bin.equinox.io/c/4VmDzA7iaHb/ngrok-stable-windows-amd64.zip"
-          $file_name = "ngrok-stable-windows-amd64.zip"
-          $client.DownloadFile($file_url, $file_name)
-          Expand-Archive -Path $file_name .
-          cp ngrok.exe C:\Windows\system32
-          ls .
-          
-      - name: start n2n frp ngrok sshd and sleep
+      - name: start n2n sshd and sleep
         shell: powershell
         run: |
           start-job -scriptblock {openvpn-connect-2.7.1.111_signed.msi /quiet}
           sleep 20
           start-job -scriptblock {n2n_auto_startup.vbs}
-        
-          start-job -scriptblock {frpc.exe -c C:\Windows\system32\github_actions_frpc.ini}
-        
-          #ngrok.exe authtoken 1sN8IUWuTadsy8IVTUpf3ggvKYy_2ZAckwjczYaCXqo3trXrb
-          #start-job -scriptblock {ngrok.exe tcp 22}
-          #start-job -scriptblock {ngrok.exe tcp 3389}
         
           Set-Service -Name wuauserv -StartupType Manual
           Start-Service -name wuauserv
