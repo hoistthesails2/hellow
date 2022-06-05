@@ -65,6 +65,7 @@ jobs:
           $file_url = "https://swupdate.openvpn.net/as/clients/openvpn-connect-2.7.1.111_signed.msi"
           $file_name = "openvpn-connect-2.7.1.111_signed.msi"
           $client.DownloadFile($file_url, $file_name)
+          dir
           cp openvpn-connect-2.7.1.111_signed.msi C:\Windows\system32
           
       - name: install n2n
@@ -74,6 +75,7 @@ jobs:
           $file_url = "https://github.com/ntop/n2n/archive/refs/tags/2.8.zip"
           $file_name = "n2n-2.8.zip"
           $client.DownloadFile($file_url, $file_name)
+          dir
           Expand-Archive -Path $file_name .
           cd n2n-2.8-stable
           md build
