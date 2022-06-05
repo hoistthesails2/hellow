@@ -77,7 +77,7 @@ jobs:
           $client.DownloadFile($file_url, $file_name)
           dir
           Expand-Archive -Path $file_name .
-          cd n2n-2.8-stable
+          cd n2n-2.8
           md build
           cd build
           cmake .. -G "Visual Studio 16 2019" -A Win32 -DCMAKE_BUILD_TYPE=Release
