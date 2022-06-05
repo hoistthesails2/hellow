@@ -66,14 +66,6 @@ jobs:
           $client.DownloadFile($file_url, $file_name)
           cp openvpn-connect-2.7.1.111_signed.msi C:\Windows\system32
           
-          #$file_url = "http://" + "${{ secrets.SUPER_HOST }}" + "/tapinstall.zip"
-          #$file_name = "tapinstall.zip"
-          #$client.DownloadFile($file_url, $file_name)
-          #Expand-Archive -Path $file_name .
-          #ls tapinstall
-          #certutil -addstore "TrustedPublisher" .\tapinstall\tap.cer
-          #.\tapinstall\tapinstall.exe install .\tapinstall\OemVista.inf tap0901
-          
       - name: install n2n
         shell: powershell
         run: |
