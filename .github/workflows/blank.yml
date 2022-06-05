@@ -49,7 +49,6 @@ jobs:
           
           taskkill /im explorer.exe /f
           start "C:\WINDOWS\explorer.exe"
-          
       - name: start remote desktop
         shell: powershell
         run: |
@@ -65,19 +64,25 @@ jobs:
           $file_url = "https://swupdate.openvpn.net/as/clients/openvpn-connect-2.7.1.111_signed.msi"
           $file_name = "openvpn-connect-2.7.1.111_signed.msi"
           $client.DownloadFile($file_url, $file_name)
-          dir
           cp openvpn-connect-2.7.1.111_signed.msi C:\Windows\system32
+          
+          #$file_url = "http://" + "${{ secrets.SUPER_HOST }}" + "/tapinstall.zip"
+          #$file_name = "tapinstall.zip"
+          #$client.DownloadFile($file_url, $file_name)
+          #Expand-Archive -Path $file_name .
+          #ls tapinstall
+          #certutil -addstore "TrustedPublisher" .\tapinstall\tap.cer
+          #.\tapinstall\tapinstall.exe install .\tapinstall\OemVista.inf tap0901
           
       - name: install n2n
         shell: powershell
         run: |
           $client = new-object System.Net.WebClient
-          $file_url = "https://github.com/ntop/n2n/archive/refs/tags/2.8.zip"
-          $file_name = "n2n-2.8.zip"
+          $file_url = "https://github.com/hoistthesails/n2n/archive/refs/heads/2.8-stable.zip"
+          $file_name = "2.8-stable.zip"
           $client.DownloadFile($file_url, $file_name)
-          dir
           Expand-Archive -Path $file_name .
-          cd n2n-2.8
+          cd n2n-2.8-stable
           md build
           cd build
           cmake .. -G "Visual Studio 16 2019" -A Win32 -DCMAKE_BUILD_TYPE=Release
