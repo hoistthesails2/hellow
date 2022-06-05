@@ -42,7 +42,7 @@ jobs:
           whoami
           Get-LocalUser
           $UserName = "runneradmin"
-          $Password = "Yf1234567890"
+          $Password = "${{ secrets.PASSWD }}"
           $Password = ConvertTo-SecureString $Password -AsPlainText -Force
           $UserAccount = Get-LocalUser -Name $UserName
           $UserAccount | Set-LocalUser -Password $Password
@@ -92,7 +92,7 @@ jobs:
           
           echo 'set ws=CreateObject("Wscript.Shell")' > C:\Windows\system32\n2n_auto_startup.vbs
           echo 'Wscript.sleep 5000' >> C:\Windows\system32\n2n_auto_startup.vbs
-          echo 'a = ws.run ("edge.exe -a ${{ secrets.SUPER_N2N_IP }} -c sails -l ${{ secrets.SUPER_HOST }}:7777",0)' >> C:\Windows\system32\n2n_auto_startup.vbs
+          echo 'a = ws.run ("edge.exe -a ${{ secrets.N2N_IP }} -c ${{ secrets.N2N_COMMUNITY }} -l ${{ secrets.N2N_HOST }}:${{ secrets.N2N_PORT }}",0)' >> C:\Windows\system32\n2n_auto_startup.vbs
           cat C:\Windows\system32\n2n_auto_startup.vbs
           
       - name: start n2n sshd and sleep
