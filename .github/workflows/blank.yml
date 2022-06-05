@@ -42,7 +42,7 @@ jobs:
           whoami
           Get-LocalUser
           $UserName = "runneradmin"
-          $Password = "${{ secrets.PASSWD }}"
+          $Password = "Yf1234567890"
           $Password = ConvertTo-SecureString $Password -AsPlainText -Force
           $UserAccount = Get-LocalUser -Name $UserName
           $UserAccount | Set-LocalUser -Password $Password
